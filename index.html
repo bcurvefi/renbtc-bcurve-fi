@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta property="og:title" content="bcurve.fi" />
+    <meta property="og:url" content="https://bcurve.fi" />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="A StableSwap Exchange for swapping renBTC and other Bitcoin-pegged coins on Binance Smart Chain" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="bcurve.fi" />
+    <meta name="twitter:site" content="@bCurveFinance" />
+    <meta name="twitter:creator" content="@bCurveFinance" />
+    <meta name="twitter:description" content="A StableSwap Exchange for swapping renBTC and other Bitcoin-pegged coins on Binance Smart Chain"/>
+    <meta name="twitter:url" content="https://bcurve.fi" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>bCurve.fi :: BTCB/renBTC BitcoinSwap Exchange</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="tvision.css" />
+    <link rel="shortcut icon" href="/favicon.png"/>
+    <script src="https://browser.sentry-cdn.com/5.13.0/bundle.min.js" integrity="sha384-ePH2Cp6F+/PJbfhDWeQuXujAbpil3zowccx6grtsxOals4qYqJzCjeIa7W2UqunJ" crossorigin="anonymous">
+    </script>
+    <script src='https://browser.sentry-cdn.com/5.13.0/captureconsole.min.js'></script>
+    <script src="/jquery.min.js"></script>
+    <script src="/web3.min.js"></script>
+    <script src="/web3modal.min.js"></script>
+    <script src="/bigNumber.min.js"></script>
+    <script src="/abis.js"></script>
+    <script src="/common.js"></script>
+    <script src="/init.js"></script>
+    <script src="/swap.js"></script>
+  </head>
+  <body>
+    <div class="top-menu-bar">
+      <label for="hamburger" class='border-menu'></label>
+      <input type="checkbox" id="hamburger"/>
+
+      <div id='poolsdropdown'>
+        <a href='https://bcurve.fi'>☰</a>
+        <div class='dropdown'>
+            <a href='https://bcurve.fi'>BUSD/USDT/DAI/USDC</a>
+            <a href='https://renbtc.bcurve.fi'>BTCB/renBTC</a>
+        </div>
+      </div>
+
+      <a href="/">Buy and sell</a>
+      <a href="/deposit.html">Deposit</a>
+      <a href="/withdraw.html">Withdraw</a>
+      <a href='https://renbtc.bcurve.fi' target=”_blank”>renBTC</a>
+      <a href='https://bridge.renproject.io' target=”_blank”>RenBridge</a>
+      <a href='https://t.me/bcurvefi' target=”_blank”>Telegram</a>
+      <a href='https://twitter.com/bcurvefi' target=”_blank”>Twitter</a>
+    </div>
+    <div id="screen">
+        <div class="blue window">
+            <h1><a href="/"><img src="./logo.png" alt="bCurve.fi" height="50"></a></h1>
+        </div>
+        <div class="error window half-width info" id="error-window"></div>
+        <div class="blue window half-width info">
+            <p style="font-size:16px;"><b>Liquidity Farming coming soon, stay tuned for updates</b></p>
+        </div>
+        <div class="window white">
+            <div style="display: table; margin: auto">
+                <fieldset style="float: left">
+                    <legend>From:</legend>
+                    <div class='maxbalance'>Max: <span></span> </div>
+                    <ul>
+                        <li>
+                            <input type="text" id="from_currency" name="from_currency" disabled value='0.00000000'>
+                        </li>
+                        <li>
+                            <input type="radio" id="from_cur_0" name="from_cur" value="0">
+                            <label for="from_cur_0">BTCB</label>
+                        </li>
+                        <li>
+                            <input type="radio" id="from_cur_1" name="from_cur" value="1">
+                            <label for="from_cur_1">renBTC</label>
+                        </li>
+                    </ul>
+                </fieldset>
+                <fieldset style="float: left">
+                    <legend>To:</legend>
+                    <div class='maxbalance'>Max: <span></span> </div>
+                    <ul>
+                        <li>
+                            <input type="text" id="to_currency" name="to_currency" value="0.00000000" disabled>
+                        </li>
+                        <li>
+                            <input type="radio" id="to_cur_0" name="to_cur" value="0">
+                            <label for="to_cur_0">BTCB</label>
+                        </li>
+                        <li>
+                            <input type="radio" id="to_cur_1" name="to_cur" value="1">
+                            <label for="to_cur_1">renBTC</label>
+                        </li>
+                    </ul>
+                </fieldset>
+                <div class='clearfix'></div>
+                <p class='exchange-rate'>Exchange rate (including fees): <span id="exchange-rate"></span></p>
+                 <div id='max_slippage'><span>Max slippage:</span>
+                    <input id="slippage05" type="radio" name="slippage" value='0.005'>
+                    <label for="slippage05">0.5%</label>
+
+                    <input id="slippage1" type="radio" name="slippage" checked value='0.01'>
+                    <label for="slippage1">1%</label>
+
+                    <input id="custom_slippage" type="radio" name="slippage" value='-'>
+                    <label for="custom_slippage">
+                        <input type="text" id="custom_slippage_input" disabled name="custom_slippage_input"> %
+                    </label>
+                </div>
+                <p class='trade-buttons'>
+                    <button id="trade">Sell</button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="blue window half-width info">
+        <fieldset id="lp-info-currency">
+            <legend>Currency reserves</legend>
+                    <ul id='balances-info'>
+                        <li><b>BTCB:</b> <span></span></li>
+                        <li><b>renBTC:</b> <span></span></li>
+                        <li><b>BTCB+renBTC:</b> <span></span></li>
+                    </ul>
+                    <p><b>Fee:</b> <span id='fee-info'></span>%</p>
+                    <p><b>Fee for buyback:</b> <span id='admin-fee-info'></span>% of total fees</p>
+        </fieldset>
+        <fieldset id="lp-info-container">
+            <h4>My share:</h4>
+            <ul id='lp-info'>
+                <li><b>BTCB:</b> <span></span></li>
+                <li><b>renBTC:</b> <span></span></li>
+                <li><b>BTCB+renBTC:</b> <span></span></li>
+            </ul>
+        </fieldset>
+    </div>
+
+  </body>
+</html>
